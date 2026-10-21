@@ -9,7 +9,7 @@ A synthetic, domain-neutral support-ticket application for a 4-hour Claude Code 
 - Summarize tickets by priority, status, and unresolved count.
 - Run a small command-line interface and standard-library unit tests.
 
-**Not implemented yet:** SLA escalation. That is the feature students will plan and implement in Day 2 Lab 3.
+- SLA escalation: `get_escalated_tickets(tickets, *, as_of=...)` returns unresolved tickets whose age meets the threshold for their priority (HIGH 24h, MEDIUM 48h, LOW 72h). Exactly at the threshold counts; RESOLVED and future-dated tickets never escalate; `as_of` must be timezone-aware.
 
 ## Layout
 
@@ -33,6 +33,7 @@ python3 -m unittest discover -s tests -v
 python3 -m app.main
 python3 -m app.main --priority HIGH
 python3 -m app.main --status OPEN
+python3 -m app.main --escalated --as-of 2026-10-22T12:00:00Z
 ```
 
 ## Day 2 Lab 1 goals
