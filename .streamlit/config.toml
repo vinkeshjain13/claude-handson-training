@@ -1,0 +1,3 @@
+[server]
+# The app has no authentication; bind to localhost only.
+address = "127.0.0.1"

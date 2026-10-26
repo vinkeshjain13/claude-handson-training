@@ -1,0 +1,23 @@
+ticket_id,customer_message,created_at
+T-1001,"My order arrived damaged and I want a refund.",2026-03-14T09:30:00
+T-1002,"Where is my package? Tracking has not updated in a week.",2026-03-14T10:05:00
+T-1003,"I was charged twice for the same order. Please fix this immediately.",2026-03-14T11:20:00
+T-1004,"I cannot log in to my account and the password reset email never arrives.",2026-03-15T08:45:00
+T-1005,"Thanks, the jacket fits great and arrived early!",2026-03-15T09:10:00
+T-1006,"The blender stopped working after two days. This is terrible quality.",2026-03-15T13:00:00
+T-1007,"Do you sell gift cards for the winter collection?",2026-03-16T10:00:00
+T-1008,"I would like to return a pair of shoes that are too small.",2026-03-16T11:30:00
+T-1009,"URGENT: my delivery was marked as delivered but nothing is here.",2026-03-16T14:15:00
+T-1010,"Can you update the billing address on my profile?",2026-03-17T09:00:00
+T-1011,"Great service, the support agent was very helpful. Thank you!",2026-03-17T12:40:00
+T-1012,"The lamp I received has a cracked base and is broken.",2026-03-17T15:25:00
+T-1013,"I think there is a fraud charge on my statement. I am very worried.",2026-03-18T08:20:00
+T-1014,"What are your store opening hours on public holidays?",2026-03-18T10:50:00
+T-1015,"My refund has still not arrived after two weeks. I am very disappointed.",2026-03-18T13:35:00
+T-1016,"The package is late again. This is the worst delivery experience.",2026-03-19T09:25:00
+T-1017,"I forgot my username and need help to sign in.",2026-03-19T11:05:00
+T-1018,"The invoice total looks wrong, I was overcharged for shipping.",2026-03-19T14:00:00
+T-1019,"Love the new scarf, the colour is perfect.",2026-03-20T10:15:00
+T-1020,"Please cancel my order, I ordered the wrong size.",2026-03-20T12:00:00
+T-1021,"The zipper on my bag is defective and came off on first use.",2026-03-20T16:30:00
+T-1022,"Is there a discount code for first-time buyers?",2026-03-21T09:45:00

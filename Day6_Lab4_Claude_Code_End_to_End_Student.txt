@@ -1,0 +1,442 @@
+DAY 6 — LAB 4: FROM CLIENT BRIEF TO DEPLOYED APPLICATION
+Claude Code Agentic Development + Context and Cost Efficiency
+STUDENT HANDS-ON LAB | TARGET: 115 MINUTES | ALL-IN-ONE TXT
+
+======================================================================
+HOW TO USE THIS HANDOUT
+======================================================================
+This is a fully guided lab. Begin with an EMPTY project folder. Follow
+steps in order; do not paste shell commands into Claude Code or Claude
+prompts into the shell. Each step includes WHY, DO, CHECK and FIX.
+
+Environment:
+- VS Code, terminal, Python 3.11+ and preconfigured Claude Code CLI.
+- Git, a GitHub account, and Streamlit Community Cloud account for deploy.
+- No OpenRouter, Anthropic API key, or application runtime API required.
+- The delivered app uses deterministic local Python business rules. Claude
+  Code is used to DEVELOP the app; the app itself does not call Claude.
+- Use only SYNTHETIC sample data. Never publish real customer data.
+
+Important: Claude Code already handles supported prompt-prefix caching
+internally. We do NOT write cache_control code into this Streamlit app.
+CLAUDE.md is reusable project instruction context, NOT a persistent LLM
+response cache. Documentation and scoped file reads may reduce repeated
+exploration, but are NOT equivalent to provider-side prompt caching.
+Your account may not expose cache-hit counters or dollar cost.
+Do not claim caching savings without available telemetry.
+
+Time plan: 10m brief; 10m setup; 15m subagents; 25m implementation;
+15m testing; 20m context/cost experiments; 15m deployment; 5m review.
+
+======================================================================
+STEP 1 — CREATE AN EMPTY WORKSPACE (10 MIN)
+WHY: Work in a reproducible, isolated project and verify Claude login.
+======================================================================
+TERMINAL (macOS/Linux):
+  mkdir day6-support-portal
+  cd day6-support-portal
+  code .
+  python3 --version
+  git --version
+  claude --version
+  claude
+
+Windows PowerShell:
+  mkdir day6-support-portal
+  cd day6-support-portal
+  code .
+  py --version
+  git --version
+  claude --version
+  claude
+
+INSIDE CLAUDE CODE (not shell):
+  /status
+  /model
+
+CHECK:
+- Claude Code opens with your organization's configured login.
+- /model shows an available default model.
+- You have an empty folder; no API credential is requested.
+FIX:
+- If 'claude' is not found, consult your instructor's preconfigured CLI.
+- If an organization disallows model selection, retain its default model.
+- Never paste session credentials, tokens, or private keys in the chat.
+
+======================================================================
+STEP 2 — PROVIDE THE CLIENT BRIEF AND ACCEPTANCE CRITERIA (10 MIN)
+WHY: Convert vague business language into testable acceptance criteria.
+======================================================================
+COPY THIS INTO CLAUDE CODE:
+
+You are the lead engineer for a classroom capstone. Client brief:
+A retail customer-support team needs a Streamlit web portal that can
+upload a CSV of synthetic support tickets; display total ticket count,
+priority distribution, category distribution and ticket table; classify
+category, urgency/priority and rough sentiment with deterministic Python
+rules; and generate editable template responses. No external LLM calls,
+paid APIs, external database, authentication, or real user data.
+
+Requirements:
+1. Work in this repository only. Do not install anything yet.
+2. Produce docs/requirements.md with user stories and acceptance tests.
+3. Produce docs/architecture.md containing a small modular architecture.
+4. Produce docs/implementation_status.md with numbered milestones.
+5. Define CSV schema: ticket_id, customer_message, created_at. Generate
+   examples with safe synthetic text only.
+6. Keep scope MVP: app.py, src/, tests/, data/sample_tickets.csv,
+   requirements.txt, README.md, .gitignore, CLAUDE.md.
+7. Never claim genuine ML/AI sentiment accuracy; these are rules.
+8. Do not implement or modify application code yet.
+Return a concise summary of files created.
+
+CHECK IN TERMINAL (outside Claude Code, or ask Claude to run):
+  ls docs
+Windows PowerShell: dir docs
+Expected files: requirements.md, architecture.md, implementation_status.md.
+Read the acceptance criteria; correct missing items before continuing.
+FIX: Ask: 'Create only the missing planning documents; do not rewrite
+existing correct documents.'
+
+======================================================================
+STEP 3 — CONFIGURE SPECIALIST SUBAGENTS (15 MIN)
+WHY: Orchestrator delegates jobs by responsibility. Model choices are
+role-based, NOT automatic complexity detection. Enterprise policy may
+limit access to individual models.
+======================================================================
+COPY INTO CLAUDE CODE:
+
+Create .claude/agents/ with exactly four project-level Markdown agent
+files, valid YAML frontmatter and a focused system prompt for each:
+
+1) solution-architect.md:
+   name: solution-architect
+   description: Use for requirements, component boundaries and design.
+   model: sonnet
+   Responsibilities: architecture and acceptance criteria; no code edits
+   unless explicitly requested.
+
+2) app-developer.md:
+   name: app-developer
+   description: Use for implementing Streamlit UI and pure Python logic.
+   model: sonnet
+   Responsibilities: implement small, modular, testable changes.
+
+3) qa-engineer.md:
+   name: qa-engineer
+   description: Use for focused pytest authoring, execution and triage.
+   model: haiku
+   Responsibilities: verify acceptance criteria and report test results.
+
+4) security-reviewer.md:
+   name: security-reviewer
+   description: Use for read-only review of credentials, inputs and safety.
+   model: haiku
+   Responsibilities: flag unsafe code and recommend specific fixes;
+   do not edit files.
+
+Keep descriptions specific so the orchestrator can choose subagents.
+Use only supported Claude Code frontmatter; if a model is unavailable
+under our organization, report the limitation and use model: inherit
+instead. Show the file names and each resolved model setting. Do not
+execute application development yet.
+
+CHECK:
+- .claude/agents/ contains four Markdown files.
+- Their YAML includes name, description and model.
+- In Claude Code run /list-agents if your version supports it, or ask:
+  'List the available project subagents and their model settings.'
+- Do not rely on older /agents wizard instructions.
+FIX:
+- If not discovered, validate YAML frontmatter and names, then restart
+  Claude Code within the project. Use 'model: inherit' if restricted.
+- If Claude ignores a specialist, invoke it explicitly by name.
+
+======================================================================
+STEP 4 — BUILD THE APPLICATION USING THE ORCHESTRATOR (25 MIN)
+WHY: Observe requirements => delegated implementation => runnable app.
+======================================================================
+COPY INTO CLAUDE CODE:
+
+Act as the project orchestrator. Read docs/requirements.md and
+ docs/architecture.md before development. Delegate architecture questions
+ to solution-architect, implementation to app-developer and tests to
+ qa-engineer as appropriate. Do not spawn redundant agents.
+
+Implement the complete MVP:
+- app.py Streamlit entrypoint with title, file uploader, summary metrics,
+  category and priority charts, downloadable analyzed CSV, and a table.
+- src/ticket_logic.py exposing independently testable functions:
+  normalize_tickets(dataframe), classify_ticket(message),
+  analyze_tickets(dataframe), draft_response(message, category, priority).
+- Rules should cover refund, delivery, technical issue and general;
+  priorities high/medium/low and simple positive/neutral/negative cues.
+- Carefully validate CSV headers and input lengths, handle empty upload,
+  missing values and duplicate ticket IDs without traceback to users.
+- Include data/sample_tickets.csv with 15+ fictional records.
+- Include requirements.txt with streamlit, pandas and pytest.
+- Include a useful README with local startup steps and limitations.
+- Implement at least 8 meaningful tests in tests/test_ticket_logic.py.
+- Add .gitignore for .venv/, __pycache__/, .pytest_cache/, .env,
+  .streamlit/secrets.toml, and other generated private files.
+- Never call any external LLM API and do not create or request API keys.
+- Do not use real customer data; be deterministic and safe to deploy.
+- Run tests once, fix failures, and update docs/implementation_status.md.
+Report actual delegations and tests; distinguish attempted vs completed.
+
+CHECK:
+Expected structure (may include additional files):
+  .claude/agents/*.md
+  CLAUDE.md (Step 6 will refine)
+  docs/requirements.md, architecture.md, implementation_status.md
+  app.py
+  src/ticket_logic.py
+  data/sample_tickets.csv
+  tests/test_ticket_logic.py
+  requirements.txt, README.md, .gitignore
+
+TEST IN TERMINAL, if Claude hasn't installed dependencies:
+macOS/Linux:
+  python3 -m venv .venv
+  source .venv/bin/activate
+  python -m pip install -r requirements.txt
+  python -m pytest -q
+  python -m streamlit run app.py
+Windows PowerShell:
+  py -m venv .venv
+  .\.venv\Scripts\Activate.ps1
+  python -m pip install -r requirements.txt
+  python -m pytest -q
+  python -m streamlit run app.py
+
+CHECK BROWSER:
+- Open the local URL reported by Streamlit, typically localhost:8501.
+- Upload data/sample_tickets.csv.
+- Verify charts, priorities, categories and template response.
+- Try a CSV with a missing column: friendly error, not an exception.
+FIX:
+- Missing import? Confirm requirements installed in active venv.
+- Test failure? Paste failing traceback to Claude and ask for a focused fix.
+- Port occupied? Use: python -m streamlit run app.py --server.port 8502
+- App shouldn't use network API endpoints to classify tickets.
+
+======================================================================
+STEP 5 — RUN QA + SECURITY REVIEW (15 MIN)
+WHY: A green-looking dashboard is not enough without behavior checks.
+======================================================================
+COPY INTO CLAUDE CODE:
+
+Use qa-engineer to test normal CSV upload, missing headers, blank text,
+ duplicate IDs, and deterministic classification. Run pytest and report
+ tests passed/failed, with fixes delegated to app-developer only when
+ justified. Then ask security-reviewer for a read-only review of:
+ secrets, upload validation, CSV formula injection on downloads,
+ exception information disclosure, unsafe file handling, and external
+ API dependencies. Fix confirmed medium/high severity findings, re-run
+ pytest, and update docs/implementation_status.md. Do not invent test
+ results or claim a security audit has been completed.
+
+CHECK:
+  python -m pytest -q
+- All tests pass, or document residual failures honestly.
+- Review any CSV-export cells starting with =,+,-,@ as potentially
+  executable in spreadsheet tools; mitigate if exporting user content.
+- Ensure no secrets or real user data are present.
+FIX: If agent reports a problem with no reproduction, request the exact
+file, line and reproduction before making large changes.
+
+======================================================================
+STEP 6 — PROMPT CACHING + CONTEXT EFFICIENCY (20 MIN)
+WHY: Separate provider-side caching from reducing repeated investigation.
+======================================================================
+PART A — CREATE A CONCISE CLAUDE.md (5 MIN)
+COPY INTO CLAUDE CODE:
+
+Write or refine root CLAUDE.md using ONLY verified repo facts:
+- project purpose and architecture in <= 20 succinct lines;
+- exact test command and run command;
+- where classification logic and tests live;
+- no external API calls or credentials;
+- use targeted files rather than broad repository scans;
+- prefer narrow diffs and update implementation_status.md after milestones.
+Do not copy huge documentation into CLAUDE.md. Display its final contents.
+
+CHECK: It is short, current, and actually matches the repository.
+Explain: CLAUDE.md is reloaded as instruction context. It is NOT a local
+query-response memoization store. Its stable prefix can benefit from
+Claude Code's provider-side prompt caching where supported.
+
+PART B — OBSERVE AUTOMATIC PROMPT CACHE BEHAVIOR (7 MIN)
+INSIDE SAME CLAUDE CODE SESSION, run these prompts consecutively:
+
+PROMPT 1:
+Read CLAUDE.md and docs/architecture.md once. Summarize module
+responsibilities in no more than 7 lines. Do not modify files.
+
+PROMPT 2:
+Using the same unchanged architecture, identify two potential
+performance issues. Do not modify files and avoid rereading files
+unless information is missing.
+
+PROMPT 3:
+Using the same unchanged architecture, identify two maintainability
+improvements. Do not modify files and avoid rereading files unless needed.
+
+CHECK/OBSERVE:
+- Session context is largely stable; later turns may reuse eligible
+  prompt prefixes in Claude Code automatically.
+- Try /cost IF your account exposes per-session API costs. Enterprise
+  seats may only show usage limits, not money/cache counters.
+- Use /context if available to inspect session context.
+- If detailed cache telemetry is NOT visible, write 'CACHE HIT NOT
+  DIRECTLY VERIFIED' in the student notes. Do not fake token values.
+- Cache behavior depends on provider, prefix stability, time, and
+  organization policies. Repeating a question isn't a guaranteed hit.
+
+PART C — COMPARE RE-EXPLORATION VS TARGETED REUSE (8 MIN)
+Use two small, equivalent READ-ONLY reviews. Because tool calls and
+model decisions vary, this is qualitative unless telemetry is available.
+
+PROMPT A (broad):
+Review the entire repository and identify one opportunity to simplify
+classify_ticket(). Do not edit files. Report how many files you inspected
+and tool operations you used when available.
+
+PROMPT B (targeted):
+Consult CLAUDE.md and docs/architecture.md. Inspect only
+src/ticket_logic.py and related tests as necessary. Identify one
+opportunity to simplify classify_ticket(). Do not edit files. Report
+how many files/tool operations you used when available.
+
+Write down:
+  Broad review files inspected: __________
+  Targeted review files inspected: ________
+  Broad tool calls (if shown): ___________
+  Targeted tool calls (if shown): ________
+  /cost values (if exposed): ____________
+  Cache write/read tokens (only if exposed): ____________
+
+IMPORTANT INTERPRETATION:
+- Comparing consecutive prompts is NOT a controlled cost benchmark.
+- Targeted reads can reduce unnecessary tool output/context, but may
+  not always cost less, and cached input might change the economics.
+- /compact summarizes long chat context; /clear resets chat history.
+  Neither is a general-purpose reusable answer cache. Do NOT run /clear
+  mid-experiment; it destroys comparability and conversation continuity.
+- Use /clear when switching to unrelated work, /compact to continue
+  a lengthy active task; both may change caching behavior.
+- If /cost is unavailable, assess file reads and tool calls; do not
+  manufacture 'saved dollars'.
+
+PART D — SHORT REFLECTION:
+In docs/implementation_status.md append:
+1. What we observed, including which metrics were actually visible.
+2. Difference: automatic prompt caching vs CLAUDE.md vs artifact reuse.
+3. How role-based Haiku/Sonnet routing can help and when quality matters.
+
+======================================================================
+STEP 7 — PREPARE AND DEPLOY VIA GITHUB (15 MIN)
+WHY: Deliver a real client-accessible application without extra API keys.
+======================================================================
+BEFORE PUSHING: request Claude Code to check for secrets and large files:
+
+Review .gitignore and tracked files for credentials, .env files, local
+virtual environments, caches, real customer data, and accidental data
+exports. Do not delete required source. Ensure app.py and requirements.txt
+work from a clean checkout. Give me a short predeployment checklist.
+
+SHELL:
+  git init
+  git add .
+  git status
+  git commit -m "Build customer support portal capstone"
+  git branch -M main
+
+CREATE A NEW EMPTY GITHUB REPOSITORY MANUALLY:
+  https://github.com/new
+Choose your own repo name; do not initialize README/license/gitignore
+on GitHub (we already have local files). For classroom demo, a public
+repository with synthetic data is simplest. Confirm with instructor if
+organizational policy restricts public repositories.
+
+GITHUB WILL SHOW YOUR REPO URL; REPLACE YOUR_USERNAME AND YOUR_REPO:
+  git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
+  git push -u origin main
+
+GitHub may require browser-based authentication or a credential manager;
+never type your password or tokens into Claude Code chat. If git push
+fails, follow your organization's approved GitHub authentication method.
+
+DEPLOYMENT:
+1. Visit https://share.streamlit.io and sign in with GitHub.
+2. Select Create app (or New app) -> existing repository.
+3. Select your repository, branch 'main', entrypoint 'app.py'.
+4. Select Deploy and follow the build logs.
+5. Copy the *.streamlit.app link when ready.
+6. Do not configure API secrets; this lab does not require any.
+
+CHECK:
+- Open live URL in another tab/incognito.
+- Upload the sample CSV and verify categories, counts, exports.
+- Open Streamlit app logs if startup fails.
+FIX:
+- ModuleNotFoundError => inspect requirements.txt and imports.
+- FileNotFoundError => use repo-relative paths, not absolute paths.
+- Python incompatibility => set supported Python version in advanced
+  deploy settings and review dependency requirements.
+- GitHub permissions => use an instructor-approved repository/deploy
+  account. Local app still counts as a meaningful partial completion.
+
+======================================================================
+STEP 8 — FINAL ACCEPTANCE / HAND-IN (5 MIN)
+======================================================================
+CHECK THESE ITEMS:
+[ ] Requirements and architecture docs exist and are coherent.
+[ ] Four specialist agent files exist with models verified/limitations noted.
+[ ] Claude Code actually delegated at least one task (or explicitly say no).
+[ ] Dashboard works on synthetic CSV with clear validation.
+[ ] At least 8 tests are present and pytest was executed.
+[ ] No app runtime API key or network LLM call is necessary.
+[ ] CLAUDE.md is concise and accurate.
+[ ] Prompt caching was discussed; observed telemetry vs assumptions labeled.
+[ ] Context-reuse experiment recorded inspected files / tool calls if shown.
+[ ] GitHub repository created; deployment URL opens if allowed.
+
+SUBMIT:
+- GitHub repository URL: _________________________________
+- Streamlit live app URL: _________________________________
+- Test result summary: ___________________________________
+- Caching metrics visible? YES / NO
+- Any remaining limitations: _____________________________
+
+======================================================================
+OPTIONAL EXTENSION (ONLY IF TIME)
+======================================================================
+1. Add 3 extra rules and corresponding tests using the app-developer and
+   qa-engineer subagents; verify no regressions.
+2. Compare Sonnet and Haiku on identical scoped QA work (if enabled by
+   your organization). Record quality and tool operations, not imagined
+   billing savings.
+3. Create a new feature branch, add a small CSV filter, open a GitHub PR.
+
+======================================================================
+TROUBLESHOOTING QUICK REFERENCE
+======================================================================
+Claude CLI doesn't start: check your preconfigured corporate environment.
+Agent not discovered: inspect .claude/agents/*.md YAML then restart CLI.
+Haiku/Sonnet unavailable: set model: inherit; document restriction.
+Streamlit missing: activate venv and pip install -r requirements.txt.
+pytest missing: install requirements in same Python environment.
+Git push denied: use approved GitHub authentication/permissions.
+Deployment failed: inspect Streamlit logs and fix only the root cause.
+/cost unavailable: normal in some subscription/enterprise environments.
+Cache metrics absent: note unverified; do not infer hits from elapsed time.
+
+OFFICIAL REFERENCES (for learning and version-specific checks):
+- Claude Code subagents: https://code.claude.com/docs/en/sub-agents
+- Claude Code cost/usage: https://support.claude.com/en/articles/14552983-models-usage-and-limits-in-claude-code
+- CLAUDE.md: https://support.claude.com/en/articles/14553240-give-claude-context-claude-md-and-better-prompts
+- Prompt caching: https://platform.claude.com/docs/en/build-with-claude/prompt-caching
+- Streamlit deployment: https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/deploy
+
+END OF STUDENT LAB 4
