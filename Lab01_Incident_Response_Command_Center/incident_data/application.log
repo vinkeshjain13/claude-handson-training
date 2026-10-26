@@ -1,0 +1,10 @@
+2026-10-24T09:40:00+05:30 INFO GET /health 200 12ms request_id=pre01
+2026-10-24T09:52:00+05:30 INFO POST /api/payments/charge 200 128ms request_id=pre02
+2026-10-24T10:05:00+05:30 INFO POST /api/payments/charge 200 141ms request_id=pre03
+2026-10-24T10:14:47+05:30 WARN POST /api/payments/charge 504 10012ms error=upstream_timeout request_id=pay101
+2026-10-24T10:15:04+05:30 ERROR POST /api/payments/charge 503 8003ms error=db_connection_acquire_timeout request_id=pay102
+2026-10-24T10:15:12+05:30 ERROR GET /api/payments/status 503 8002ms error=db_connection_acquire_timeout request_id=pay103
+2026-10-24T10:16:02+05:30 ERROR POST /api/payments/charge 500 8034ms error=db_pool_exhausted active=12 max=12 request_id=pay104
+2026-10-24T10:17:17+05:30 ERROR POST /api/payments/charge 503 8008ms error=db_connection_acquire_timeout request_id=pay105
+2026-10-24T10:18:20+05:30 INFO GET /health 200 18ms request_id=health01
+2026-10-24T10:20:31+05:30 ERROR POST /api/payments/charge 503 8010ms error=db_connection_acquire_timeout request_id=pay106
