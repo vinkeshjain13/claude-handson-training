@@ -50,7 +50,3 @@ data/sample_tickets.csv Synthetic examples
 - Replies are generic templates meant to be edited by a person; there is no in-app reply editor yet.
 - No persistence: everything lives in the Streamlit session.
 - Use synthetic data only. Do not upload real customer information.
-=======
-# claude-handson-training
-claude-handson-training
->>>>>>> ebd726c6c378284d9f7bfcc25942f96d1113d522
