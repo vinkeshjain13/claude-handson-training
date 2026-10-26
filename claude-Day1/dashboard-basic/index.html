@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sales Analytics Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div>
+      <h1>Sales analytics</h1>
+      <p class="source" id="source">Loading data…</p>
+    </div>
+    <div class="top-actions">
+      <label class="btn" for="csvFile">Load CSV
+        <input type="file" id="csvFile" accept=".csv,text/csv" hidden>
+      </label>
+      <button class="btn" id="themeBtn" type="button" aria-label="Toggle dark mode">Theme</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="filters" aria-label="Filters">
+      <div class="field">
+        <span class="field-label">Range</span>
+        <div class="presets" id="presets" role="group" aria-label="Date range presets"></div>
+      </div>
+      <label class="field">
+        <span class="field-label">From</span>
+        <input type="date" id="fromDate">
+      </label>
+      <label class="field">
+        <span class="field-label">To</span>
+        <input type="date" id="toDate">
+      </label>
+      <label class="field">
+        <span class="field-label">Category</span>
+        <select id="categorySel"></select>
+      </label>
+      <label class="field">
+        <span class="field-label">Region</span>
+        <select id="regionSel"></select>
+      </label>
+      <button class="btn ghost" id="resetBtn" type="button">Reset</button>
+    </section>
+
+    <section class="kpis" id="kpis" aria-label="Key figures"></section>
+
+    <section class="card">
+      <div class="card-head">
+        <div>
+          <h2>Monthly revenue by category</h2>
+          <p class="sub" id="monthlySub"></p>
+        </div>
+        <div class="legend" id="legend" role="group" aria-label="Category legend (click to filter)"></div>
+      </div>
+      <div class="chart" id="monthly"></div>
+    </section>
+
+    <div class="two">
+      <section class="card">
+        <div class="card-head"><div>
+          <h2>Revenue by category</h2>
+          <p class="sub">Click a bar to filter</p>
+        </div></div>
+        <div id="byCategory" class="bars"></div>
+      </section>
+      <section class="card">
+        <div class="card-head"><div>
+          <h2>Revenue by region</h2>
+          <p class="sub">Click a bar to filter</p>
+        </div></div>
+        <div id="byRegion" class="bars"></div>
+      </section>
+    </div>
+
+    <section class="card">
+      <div class="card-head">
+        <div>
+          <h2>Orders</h2>
+          <p class="sub" id="tableSub"></p>
+        </div>
+        <input type="search" id="search" placeholder="Search orders…" aria-label="Search orders">
+      </div>
+      <div class="table-wrap">
+        <table id="orders">
+          <thead><tr id="thead"></tr></thead>
+          <tbody id="tbody"></tbody>
+          <tfoot><tr id="tfoot"></tr></tfoot>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <div id="tip" class="tip" role="tooltip" hidden></div>
+  <script src="app.js"></script>
+</body>
+</html>

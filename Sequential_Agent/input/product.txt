@@ -1,0 +1,4 @@
+Product: Smart Water Bottle
+Features: Tracks daily water intake; sends hydration reminders; maintains water temperature for up to 12 hours; connects to a smartphone.
+Audience: Office professionals and fitness enthusiasts.
+Constraints: No medical claims, no battery-life promises, no waterproofing promises, no pricing claims unless explicitly provided.

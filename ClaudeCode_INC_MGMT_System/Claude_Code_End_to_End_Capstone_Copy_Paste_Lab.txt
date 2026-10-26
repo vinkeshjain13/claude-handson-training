@@ -1,0 +1,537 @@
+CLAUDE CODE CAPSTONE LAB
+FROM ONE-PARAGRAPH CLIENT REQUIREMENT TO WORKING APPLICATION
+Student / Instructor Copy-Paste Notepad
+============================================================
+
+GOAL
+----
+Create a working IT Support Ticket Management System using Claude Code's
+orchestrator and six specialized subagents. Complete requirements analysis,
+architecture, implementation, testing, security review, local launch and
+handover. No cloud deployment.
+
+PREREQUISITES
+-------------
+- VS Code
+- Claude Code installed and authenticated
+- Python 3.10+ installed
+- Working Claude Code model access
+- Internet access for Python dependency installation
+
+IMPORTANT INSTRUCTIONS
+----------------------
+1. Create an EMPTY folder named IT-Support-Agentic-Project and open it in VS Code.
+2. Open VS Code Terminal, run `claude`, and sign in if necessary.
+3. Prompts labeled "PASTE INTO CLAUDE CODE" must go into the Claude Code
+   interactive prompt, not the normal shell.
+4. Paste one numbered prompt at a time. Check outputs before moving on.
+5. Approve file changes and terminal commands after reviewing them.
+6. If Claude Code is interrupted, resume in the same project folder.
+7. Agent names, files, and commands must be VERIFIED; do not accept an agent's
+   unverified claim that a test passed or an app started.
+8. This is a LOCAL DEMO app. A role selector is NOT real login/security.
+
+============================================================
+STEP 1 — OPEN THE EMPTY PROJECT IN CLAUDE CODE
+============================================================
+
+IN VS CODE TERMINAL (NORMAL SHELL):
+
+claude
+
+Once the Claude Code prompt appears, proceed below.
+
+============================================================
+STEP 2 — CREATE THE ENGINEERING AGENT TEAM
+============================================================
+
+PASTE INTO CLAUDE CODE — PROMPT 1:
+
+We are starting a new enterprise software engineering project in this empty folder.
+
+Act as the Lead AI Engineering Orchestrator.
+
+Your first task is ONLY to initialize the AI engineering team and project instructions. Do not build the application yet.
+
+Create the following six specialized Claude Code subagents as Markdown files inside .claude/agents/:
+
+1. requirements-analyst
+   - Analyze client requirements.
+   - Identify ambiguities, assumptions and missing details.
+   - Prepare user stories, functional requirements and acceptance criteria.
+   - Do not implement application code.
+
+2. solution-architect
+   - Design application architecture, modules, data models and database schema.
+   - Define interfaces between UI, service and database layers.
+   - Prepare a practical technical implementation plan.
+   - Do not implement application code.
+
+3. backend-developer
+   - Implement Python business logic, persistence and validation.
+   - Use SQLite with Python's built-in sqlite3 module.
+   - Own backend service and database files.
+   - Follow approved architecture and interface contracts.
+
+4. frontend-developer
+   - Develop the Streamlit user interface.
+   - Create forms, tables, filters and dashboard visualizations.
+   - Use backend service interfaces instead of embedding SQL in UI code.
+   - Own UI files.
+
+5. qa-engineer
+   - Create and execute pytest tests.
+   - Verify acceptance criteria and edge cases.
+   - Report defects and test evidence.
+   - Do not silently change production code.
+
+6. security-reviewer
+   - Review input validation, SQL injection risks, secrets, permissions and insecure workflows.
+   - Run appropriate checks when tools are available.
+   - Report actionable findings with severity.
+   - Do not claim a vulnerability is fixed unless retested.
+
+Each custom agent must have valid Claude Code YAML frontmatter, including name, description and appropriate tools supported by this installation.
+
+Use lower-risk read-only tools for analysis/review agents where practical. Give implementation agents the necessary file editing and command execution capabilities.
+
+Also create a CLAUDE.md file containing:
+- Project purpose
+- The Lead Orchestrator's responsibilities
+- Available subagents and their responsibilities
+- Mandatory delegation rules
+- Planning-before-coding requirement
+- Agent file ownership rules
+- Testing and quality requirements
+- Human approval checkpoints
+- Requirement traceability rules
+- No cloud deployment without explicit approval
+
+The orchestrator must delegate meaningful work to the configured subagents rather than impersonating their roles.
+
+Create a docs/ directory for project documentation.
+
+After creating the configuration:
+1. Show the project directory structure.
+2. List the six agents and their responsibilities.
+3. Explain how agent delegation will happen.
+4. Stop and wait for my next instruction.
+
+Do not create application code in this step.
+
+
+CHECKPOINT: You should see CLAUDE.md and six files in .claude/agents/.
+
+============================================================
+STEP 3 — VERIFY SUBAGENT CONFIGURATION
+============================================================
+
+OPTIONAL: In Claude Code, try:
+
+/list-agents
+
+If unavailable or agents do not appear, use PROMPT 2 below.
+
+PASTE INTO CLAUDE CODE — PROMPT 2:
+
+Inspect all Markdown files under .claude/agents/. Validate their YAML frontmatter and configuration against the Claude Code version installed here. Confirm which of the six agents are discoverable by the native subagent mechanism, fix invalid configurations if needed, and report any limitations. Do not create application code.
+
+
+CHECKPOINT: Verify six agent configurations. If newly created agents are not
+recognized, type /exit and restart with `claude` in the same project folder.
+
+============================================================
+STEP 4 — SUBMIT THE ONE-PARAGRAPH CLIENT REQUIREMENT
+============================================================
+
+PASTE INTO CLAUDE CODE — PROMPT 3:
+
+We have received our first client requirement.
+
+CLIENT REQUIREMENT:
+
+"Our company needs a simple IT Support Ticket Management System. Employees should be able to raise support tickets with details of their issues, assign priorities, and track progress. Support engineers should be able to view and update tickets, while managers should see a dashboard showing total tickets, pending issues, resolved tickets, and ticket priorities. We want the system to be easy to use, store information permanently, and work from a web browser."
+
+Act as the Lead Orchestrator.
+
+Delegate requirements analysis to the requirements-analyst subagent.
+
+Tasks:
+1. Save the original client paragraph unchanged in docs/client-requirements.md.
+2. Extract functional requirements.
+3. Identify non-functional requirements.
+4. Create user stories.
+5. Define testable acceptance criteria.
+6. Identify ambiguities and risks.
+7. Propose reasonable assumptions for a local classroom MVP.
+8. Create a requirement-to-acceptance-criteria mapping.
+9. Save the outputs in docs/.
+
+Important:
+- The requirements-analyst must perform the substantive analysis.
+- Do not invent security or authentication guarantees.
+- Do not begin coding.
+- Present a concise requirement summary and the assumptions that require human approval.
+- Stop after the analysis.
+
+
+CHECKPOINT: Review generated requirements and acceptance criteria in docs/.
+
+============================================================
+STEP 5 — APPROVE MVP SCOPE AND DESIGN THE ARCHITECTURE
+============================================================
+
+PASTE INTO CLAUDE CODE — PROMPT 4:
+
+I approve the following scope for the local classroom MVP:
+
+- Python 3.10+.
+- Streamlit user interface.
+- SQLite using Python's built-in sqlite3.
+- Pytest for tests and Ruff for linting.
+- Employee, Support Engineer and Manager views.
+- Employee can create tickets and view ticket status.
+- Engineer can inspect tickets, change priority/status and add resolution notes.
+- Manager dashboard displays total, open, in-progress, resolved and closed counts, plus priority and category breakdowns.
+- Ticket fields: ID, title, description, category, priority, status, creator, created_at, updated_at and resolution_note.
+- Status values: Open, In Progress, Resolved, Closed.
+- Priority values: Low, Medium, High, Critical.
+- Persist tickets in a local SQLite database.
+- For simplicity use a clearly labeled DEMO role selector, not real authentication. This is not secure authorization and must be disclosed in documentation.
+- No cloud services, external APIs or deployment.
+
+Delegate architecture design to the solution-architect subagent.
+
+Ask it to produce:
+1. System architecture.
+2. Application module responsibilities.
+3. SQLite schema.
+4. Service-layer contracts.
+5. UI design and navigation.
+6. Validation requirements.
+7. Testing strategy.
+8. Implementation work breakdown.
+9. Explicit file ownership for backend and frontend agents.
+10. Integration dependencies and parallelizable tasks.
+
+Save the design documents under docs/.
+
+Ensure the architecture is intentionally simple enough for a classroom demonstration.
+
+Do not implement application code yet.
+
+Review the architect's output, summarize the implementation plan, then stop.
+
+
+CHECKPOINT: Review architecture, schema, and implementation plan.
+
+============================================================
+STEP 6 — BUILD THE APP USING MULTI-AGENT ORCHESTRATION
+============================================================
+
+PASTE INTO CLAUDE CODE — PROMPT 5:
+
+The architecture and MVP scope are approved.
+
+Now begin implementation of the IT Support Ticket Management System using the configured specialist subagents.
+
+You are the Lead Orchestrator. Coordinate implementation through genuine Claude Code subagent delegation.
+
+PHASE 1 — FOUNDATION
+1. Review the approved architecture and acceptance criteria.
+2. Establish the Python project structure.
+3. Create requirements.txt and .gitignore.
+4. Create shared service interfaces and data contracts.
+5. Ensure backend and frontend agents understand their file ownership.
+
+PHASE 2 — BACKEND
+Delegate to backend-developer:
+1. Implement SQLite database initialization.
+2. Implement ticket data models and persistence.
+3. Implement create, read, update and list operations.
+4. Implement category, status and priority filters.
+5. Implement ticket statistics and dashboard aggregations.
+6. Validate user inputs and status transitions.
+7. Use parameterized SQL statements.
+8. Keep database/business logic separate from Streamlit UI.
+
+PHASE 3 — FRONTEND
+Delegate to frontend-developer:
+1. Build the Streamlit web application.
+2. Create a sidebar for navigation and demo role selection.
+3. Create a ticket creation page.
+4. Create a ticket listing page with search and filters.
+5. Create a support engineer ticket update interface.
+6. Create a management dashboard with charts and metrics.
+7. Show clear success and error messages.
+8. Use the agreed backend service contracts.
+
+Parallelize independent backend/frontend work where safe. Otherwise sequence tasks according to dependencies. Do not allow agents to overwrite the same files concurrently.
+
+PHASE 4 — INTEGRATION
+As orchestrator:
+1. Integrate the backend and frontend.
+2. Install local Python dependencies if permitted.
+3. Check Python imports and application entry points.
+4. Initialize the local database.
+5. Run smoke checks.
+6. Correct integration failures using the appropriate agent.
+7. Ensure the application can be launched using:
+   python -m streamlit run app/main.py
+
+Important instructions:
+- Use the real configured subagents.
+- Do not implement everything directly in the orchestrator.
+- Do not add real authentication, cloud services or unnecessary frameworks.
+- Do not claim that role selection provides security.
+- Do not replace actual execution evidence with simulated results.
+- Do not deploy.
+- Do not ask for confirmation on routine implementation choices already approved.
+- Maintain a progress summary showing agent, assigned task, outcome and affected files.
+
+Once implementation is complete, show:
+1. Agents invoked.
+2. Files created.
+3. Features implemented.
+4. Commands executed and their actual outcomes.
+5. Any unresolved issues.
+6. How to launch the application.
+
+Stop after implementation and integration.
+
+
+CHECKPOINT: Python application files, dependencies, database initialization,
+and app/main.py should now exist.
+
+============================================================
+STEP 7 — TEST, FIX, AND RETEST WITH QA AGENT
+============================================================
+
+PASTE INTO CLAUDE CODE — PROMPT 6:
+
+Act as the Lead Orchestrator and begin the quality assurance phase.
+
+Delegate test development and execution to the qa-engineer subagent.
+
+The QA agent must:
+1. Read the client requirements and acceptance criteria.
+2. Inspect the implemented application.
+3. Create pytest tests for ticket creation.
+4. Test required-field validation.
+5. Test invalid priority and status values.
+6. Test ticket retrieval and updates.
+7. Test ticket filtering.
+8. Test dashboard statistics.
+9. Test SQLite persistence using temporary test databases.
+10. Test invalid ticket identifiers and relevant edge cases.
+11. Check that database tests do not overwrite real application data.
+12. Run the complete test suite and report actual results.
+
+The Lead Orchestrator must:
+1. Review every failure.
+2. Delegate production code fixes to backend-developer or frontend-developer as appropriate.
+3. Have the QA agent independently rerun the affected tests.
+4. Repeat the test-fix-retest cycle until tests pass or three correction cycles have completed.
+5. Escalate unresolved failures rather than hiding them.
+6. Run the full regression suite after corrections.
+7. Save a report in reports/test-report.md.
+
+Do not delete, skip or weaken failing tests merely to obtain a passing result.
+
+Include:
+- Test cases
+- Actual executed commands
+- Passed and failed counts
+- Defects discovered
+- Fixes applied
+- Remaining problems
+- Acceptance criteria coverage
+
+Execute the tests for real. Do not simulate test results.
+
+Stop after testing and report the final verified status.
+
+
+CHECKPOINT: Actual pytest results and reports/test-report.md.
+
+============================================================
+STEP 8 — SECURITY AND CODE QUALITY REVIEW
+============================================================
+
+PASTE INTO CLAUDE CODE — PROMPT 7:
+
+Begin the security and code-quality review phase.
+
+Delegate the security review to the security-reviewer subagent.
+
+Review:
+1. SQL injection risks and parameterized queries.
+2. Input validation and unsafe data handling.
+3. Database exception handling.
+4. Sensitive data and hardcoded secrets.
+5. Dependency risks using appropriate available tools.
+6. Unsafe file operations.
+7. Error message information disclosure.
+8. Data integrity and status transition handling.
+9. Role-based workflow limitations.
+10. Any obvious security vulnerabilities.
+
+Explicitly document that the classroom DEMO role selector is not real authentication or authorization, and that this version must not be publicly deployed as a secure multi-user application.
+
+Also execute Ruff linting and review maintainability problems.
+
+The orchestrator must:
+1. Collect security findings.
+2. Classify findings as Critical, High, Medium or Low.
+3. Delegate actionable fixes to the responsible implementation agent.
+4. Ask the security reviewer to verify the relevant corrections.
+5. Rerun Pytest and Ruff.
+6. Save the report in reports/security-review.md.
+
+Do not claim zero vulnerabilities or production readiness without supporting evidence.
+
+Do not deploy or expose the application publicly.
+
+Present the quality review outcome and any remaining limitations.
+
+
+CHECKPOINT: Review actual security report, pytest and Ruff outcomes.
+
+============================================================
+STEP 9 — LAUNCH APP LOCALLY
+============================================================
+
+PASTE INTO CLAUDE CODE — PROMPT 8:
+
+We are ready for the local client demonstration.
+
+Act as the Lead Orchestrator.
+
+1. Check that the project dependencies are installed.
+2. Check that the database can be initialized without errors.
+3. Verify that app/main.py exists.
+4. Run the relevant application smoke tests.
+5. Start the Streamlit application locally using:
+   python -m streamlit run app/main.py --server.address 127.0.0.1 --server.port 8501
+6. If the server cannot start, diagnose the actual error and delegate a fix to the responsible agent.
+7. Do not claim the application is running until the server startup has been observed.
+8. Tell me the local URL, launch status and any remaining limitations.
+
+Keep the application local. Do not deploy or create a public tunnel.
+
+
+OPEN IN BROWSER:
+
+http://localhost:8501
+
+IF CLAUDE CODE CANNOT KEEP THE SERVER RUNNING:
+Open a SECOND VS Code terminal in the project root and run:
+
+python -m streamlit run app/main.py --server.address 127.0.0.1 --server.port 8501
+
+If your installation uses python3 rather than python, replace `python` with
+`python3`. If dependencies are missing, follow the setup instructions in the
+project README or install from requirements.txt within your project environment.
+
+MANUAL BROWSER ACCEPTANCE CHECKLIST:
+[ ] Create a ticket with title, description and priority.
+[ ] Confirm the new ticket appears in the list.
+[ ] Search for the ticket.
+[ ] Filter tickets by priority and status.
+[ ] Switch to Engineer demo role.
+[ ] Change the ticket to In Progress.
+[ ] Resolve the ticket and add a resolution note.
+[ ] Switch to Manager demo role.
+[ ] Verify dashboard statistics change correctly.
+[ ] Restart app and verify data persists.
+
+============================================================
+STEP 10 — GENERATE FINAL CLIENT HANDOVER
+============================================================
+
+PASTE INTO CLAUDE CODE — PROMPT 9:
+
+The application implementation and local acceptance demonstration are complete.
+
+Prepare the final client handover documentation.
+
+As Lead Orchestrator:
+1. Review the original client requirement.
+2. Review the implemented features.
+3. Review the acceptance criteria and test evidence.
+4. Review the security and quality reports.
+5. Generate a complete README.md with setup and execution instructions.
+6. Generate docs/handover.md containing:
+   - Project overview
+   - Architecture summary
+   - Technology stack
+   - Features implemented
+   - Agent responsibilities and actual agent contributions
+   - Requirement-to-implementation mapping
+   - Test execution summary
+   - Security findings
+   - Known limitations
+   - Local installation and execution instructions
+   - Recommendations for future enhancements
+7. Clearly identify what is verified, what is unverified and what is not implemented.
+8. Do not claim production readiness or deployment.
+
+Finally display:
+- Final project folder structure
+- Application entry point
+- Commands to install dependencies
+- Commands to run tests
+- Command to run the app
+- Overall project delivery status
+
+Do not modify the application's functionality unless needed to correct a demonstrable documentation error.
+
+
+CHECKPOINT: README.md and docs/handover.md generated; final results reviewed.
+
+============================================================
+OPTIONAL RECOVERY PROMPT — USE ONLY IF SOMETHING FAILS
+============================================================
+
+PASTE INTO CLAUDE CODE:
+
+The current project has encountered an error or failed verification.
+
+Act as the Lead Orchestrator.
+
+1. Inspect the latest actual error output.
+2. Identify the root cause before modifying files.
+3. Delegate the fix to the relevant specialist agent.
+4. Make the smallest appropriate correction.
+5. Rerun the failing command.
+6. Run relevant regression tests.
+7. Preserve existing working features and project data.
+8. Do not disable tests or weaken security checks to hide the problem.
+9. Report the cause, fix and verified outcome.
+
+If the issue is an environment or dependency problem, inspect the local Python environment and use supported installation commands.
+
+Do not redevelop the entire application from scratch.
+
+============================================================
+LAB COMPLETE WHEN
+============================================================
+[ ] Six specialist subagents are configured and actual delegation is observed.
+[ ] Client requirements and architecture are documented.
+[ ] Ticket management application runs locally in a browser.
+[ ] Data persists in SQLite after restart.
+[ ] Dashboard shows correct numbers.
+[ ] Real automated tests were executed and results recorded.
+[ ] Security and role-selection limitations are documented.
+[ ] README and handover report are available.
+
+NOTES FOR EVERYONE
+--------------------
+- The exact UI and generated code may vary across participants.
+- Test results must be verified from command output; do not assume success.
+- Agent parallelism is optional and must respect file ownership.
+- Do not accept unsupported claims of agent invocation.
+- The role selector is demo-only and NOT real authentication.
+- Model/API usage may incur charges.
+
+END OF LAB

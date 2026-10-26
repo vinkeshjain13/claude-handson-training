@@ -1,0 +1,70 @@
+{
+  "dataset": "orders_dirty.csv",
+  "total_records": 7,
+  "columns": [
+    "order_id",
+    "customer_id",
+    "amount",
+    "order_date",
+    "status"
+  ],
+  "rules": {
+    "required_columns": [
+      "order_id",
+      "customer_id",
+      "amount",
+      "order_date",
+      "status"
+    ],
+    "high_value_threshold": "50000",
+    "high_value_is_error": false,
+    "date_format": "YYYY-MM-DD",
+    "duplicate_rule": "exact match on all fields; every additional occurrence counted",
+    "row_number_includes_header": true
+  },
+  "issue_counts": {
+    "MISSING_CUSTOMER_ID": 1,
+    "DUPLICATE_RECORD": 1,
+    "INVALID_AMOUNT": 0,
+    "NEGATIVE_AMOUNT": 1,
+    "INVALID_DATE": 1,
+    "HIGH_VALUE_REVIEW": 1
+  },
+  "issues": [
+    {
+      "type": "MISSING_CUSTOMER_ID",
+      "row_number": 4,
+      "order_id": "O-103",
+      "severity": "error",
+      "evidence": "customer_id is empty"
+    },
+    {
+      "type": "NEGATIVE_AMOUNT",
+      "row_number": 5,
+      "order_id": "O-104",
+      "severity": "error",
+      "evidence": "amount -99.00 is negative"
+    },
+    {
+      "type": "INVALID_DATE",
+      "row_number": 6,
+      "order_id": "O-105",
+      "severity": "error",
+      "evidence": "order_date '2026-15-05' is not a valid YYYY-MM-DD calendar date"
+    },
+    {
+      "type": "DUPLICATE_RECORD",
+      "row_number": 7,
+      "order_id": "O-102",
+      "severity": "error",
+      "evidence": "Exact duplicate of row 3"
+    },
+    {
+      "type": "HIGH_VALUE_REVIEW",
+      "row_number": 8,
+      "order_id": "O-106",
+      "severity": "review",
+      "evidence": "amount 99999.00 exceeds threshold 50000"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+2026-10-24T09:57:08+05:30 INFO auth_success account=svc-payments source=10.20.0.18
+2026-10-24T10:11:12+05:30 WARN auth_failed account=admin source=198.51.100.40 reason=invalid_password
+2026-10-24T10:11:15+05:30 WARN auth_failed account=admin source=198.51.100.40 reason=invalid_password
+2026-10-24T10:11:18+05:30 WARN auth_failed account=admin source=198.51.100.40 reason=invalid_password
+2026-10-24T10:11:24+05:30 INFO rate_limit_applied source=198.51.100.40 path=/login
+2026-10-24T10:16:10+05:30 INFO firewall_denied source=198.51.100.40 path=/admin
+2026-10-24T10:21:00+05:30 INFO no_indicators_of_compromise_for_payment_service

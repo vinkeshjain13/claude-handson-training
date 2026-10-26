@@ -1,0 +1,22 @@
+{
+  "releases": [
+    {
+      "time": "2026-10-24T08:00:00+05:30",
+      "version": "4.7.1",
+      "changes": [
+        "baseline pool max=60",
+        "connection release in finally block"
+      ]
+    },
+    {
+      "time": "2026-10-24T09:58:00+05:30",
+      "version": "4.8.0",
+      "changes": [
+        "reconfigured payment DB client",
+        "db_pool_max changed from 60 to 12",
+        "added retry with 3 attempts and 200ms delay"
+      ],
+      "change_id": "CHG-8821"
+    }
+  ]
+}

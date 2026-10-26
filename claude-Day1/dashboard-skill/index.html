@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Sales performance</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#orders">Skip to orders table</a>
+
+  <header class="masthead">
+    <div class="masthead-inner">
+      <div class="title-block">
+        <h1>Sales performance</h1>
+        <p class="subtle" id="data-summary">Loading sales data…</p>
+      </div>
+      <nav class="jump" aria-label="Sections">
+        <a href="#overview">Overview</a>
+        <a href="#trend">Monthly trend</a>
+        <a href="#categories">Categories</a>
+        <a href="#orders">Orders</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="filterbar">
+    <section class="filters" aria-label="Filters">
+      <fieldset class="field">
+        <legend>Region</legend>
+        <div class="seg" id="region-filter"></div>
+      </fieldset>
+      <fieldset class="field">
+        <legend>Category</legend>
+        <div class="seg" id="category-filter"></div>
+      </fieldset>
+      <div class="filter-actions">
+        <p class="filter-status" id="filter-status" role="status" aria-live="polite"></p>
+        <button type="button" class="btn" id="reset-filters" disabled>Reset filters</button>
+      </div>
+    </section>
+  </div>
+
+  <main>
+    <div class="notice" id="notice" role="alert" hidden></div>
+
+    <section class="overview" id="overview" aria-label="Key metrics">
+      <article class="hero-label">
+        <h2>Total revenue</h2>
+        <p class="kpi-value" id="kpi-revenue">—</p>
+        <p class="kpi-sub" id="kpi-revenue-sub"></p>
+      </article>
+      <div class="stats">
+        <article class="stat">
+          <h2>Total orders</h2>
+          <p class="kpi-value" id="kpi-orders">—</p>
+        </article>
+        <article class="stat">
+          <h2>Average order value</h2>
+          <p class="kpi-value" id="kpi-aov">—</p>
+        </article>
+        <article class="stat">
+          <h2>Top category</h2>
+          <p class="kpi-value" id="kpi-top">—</p>
+          <p class="kpi-sub" id="kpi-top-sub"></p>
+        </article>
+      </div>
+    </section>
+
+    <div class="charts">
+      <section class="panel panel-trend" id="trend" aria-labelledby="trend-title">
+        <header class="panel-head">
+          <h2 id="trend-title">Monthly revenue</h2>
+          <p class="subtle" id="trend-sub"></p>
+        </header>
+        <div class="chart-wrap">
+          <div class="chart" id="trend-chart"></div>
+        </div>
+      </section>
+
+      <section class="panel panel-category" id="categories" aria-labelledby="category-title">
+        <header class="panel-head">
+          <h2 id="category-title">Revenue by category</h2>
+          <p class="subtle" id="category-sub"></p>
+        </header>
+        <div class="chart-wrap">
+          <div class="chart" id="category-chart"></div>
+        </div>
+      </section>
+    </div>
+
+    <section class="panel" id="orders" aria-labelledby="orders-title">
+      <header class="panel-head">
+        <h2 id="orders-title">Orders</h2>
+        <p class="subtle" id="orders-sub"></p>
+      </header>
+      <div class="table-scroll" tabindex="0" role="region" aria-labelledby="orders-title">
+        <table class="orders-table" id="orders-table">
+          <thead>
+            <tr>
+              <th scope="col" data-key="id" aria-sort="none"><button type="button">Order ID</button></th>
+              <th scope="col" data-key="date" aria-sort="descending"><button type="button">Date</button></th>
+              <th scope="col" data-key="category" aria-sort="none"><button type="button">Category</button></th>
+              <th scope="col" data-key="region" aria-sort="none"><button type="button">Region</button></th>
+              <th scope="col" data-key="revenue" aria-sort="none" class="num"><button type="button">Revenue</button></th>
+            </tr>
+          </thead>
+          <tbody id="orders-body"></tbody>
+          <tfoot id="orders-foot"></tfoot>
+        </table>
+      </div>
+      <div class="empty" id="orders-empty" hidden>
+        <p class="empty-title" id="empty-title">No orders match these filters</p>
+        <p class="subtle" id="empty-text">Remove a filter to see orders again.</p>
+        <div class="empty-actions" id="empty-actions"></div>
+      </div>
+      <div class="more" id="orders-more" hidden>
+        <button type="button" class="btn" id="show-more">Show more orders</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js" defer></script>
+</body>
+</html>

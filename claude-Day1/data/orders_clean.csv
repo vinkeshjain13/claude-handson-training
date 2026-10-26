@@ -1,0 +1,4 @@
+order_id,customer_id,amount,order_date,status
+C-201,C-21,800.00,2026-10-05,PAID
+C-202,C-22,250.00,2026-10-06,PENDING
+C-203,C-23,6000.00,2026-10-07,PAID

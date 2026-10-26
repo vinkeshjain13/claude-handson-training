@@ -1,0 +1,156 @@
+DAY 6 — MINI LAB: SEQUENTIAL AGENT EXECUTION IN CLAUDE CODE
+============================================================
+Duration: 15–20 minutes | Environment: VS Code + preconfigured Claude Code
+Goal: Experience Agent A → Agent B → Agent C, with the previous agent's output passed to the next.
+Prerequisites: Claude Code already installed and authenticated. No API keys or Python required.
+
+WHAT YOU WILL BUILD
+-------------------
+A three-agent product-content workflow:
+  1. product-analyst: turns product facts into a factual benefits brief.
+  2. marketing-writer: uses the brief to draft a product description.
+  3. quality-reviewer: uses that draft PLUS original facts to flag unsupported claims and produce a final version.
+
+IMPORTANT: Subagents have separate context. Claude Code's MAIN conversation acts as the orchestrator and makes each handoff explicit. We will save the intermediate results to disk so you can inspect them. The existence of a file alone does not prove that a subagent ran; you must also observe the actual subagent invocations.
+
+STEP 1 — CREATE A FRESH PROJECT (2 MINUTES)
+-------------------------------------------
+In VS Code, open an empty folder named sequential-agent-lab. Open its terminal and run:
+
+  mkdir -p .claude/agents input output
+  claude
+
+Inside Claude Code, run /status to verify your normal authentication.
+
+STEP 2 — CREATE THE THREE SUBAGENTS (4 MINUTES)
+-----------------------------------------------
+Copy/paste the following ONE prompt inside Claude Code:
+
+  Create exactly these three project-scoped Claude Code subagent definition files.
+  Do not invoke the agents yet. Each file must use valid YAML frontmatter
+  with name and description fields. Do not set a model; inherit normal defaults.
+
+  File 1: .claude/agents/product-analyst.md
+  name: product-analyst
+  description: Analyze supplied product facts into a brief with audience,
+  evidence-backed benefits, and prohibited unsupported claims.
+  Instructions: Read only provided product facts. Produce sections named
+  FACTS, BENEFITS, AUDIENCE, and CLAIMS_TO_AVOID. Do not invent features.
+
+  File 2: .claude/agents/marketing-writer.md
+  name: marketing-writer
+  description: Write clear product copy from a completed product-analysis brief.
+  Instructions: Use the analysis brief given in the invocation as the source.
+  Produce a headline, a 90–120-word description, and three bullet benefits.
+  Do not add facts that are not supported by the brief.
+
+  File 3: .claude/agents/quality-reviewer.md
+  name: quality-reviewer
+  description: Review marketing copy against source facts and revise unsupported claims.
+  Instructions: Compare draft against original product facts. Return sections
+  VERDICT, ISSUES, and FINAL_COPY. Correct any unsupported claims.
+
+  Print the full paths created and confirm that the frontmatter is valid.
+
+VERIFY: In the VS Code file explorer, open .claude/agents and check that all
+three .md files exist and contain frontmatter between --- lines.
+Optional: Use /agents or /list-agents if available in your installed version.
+
+STEP 3 — CREATE THE INPUT (2 MINUTES)
+--------------------------------------
+Paste this into Claude Code:
+
+  Create input/product.txt with exactly these product facts:
+  Product: Smart Water Bottle
+  Features: Tracks daily water intake; sends hydration reminders;
+  maintains water temperature for up to 12 hours; connects to a smartphone.
+  Audience: Office professionals and fitness enthusiasts.
+  Constraints: No medical claims, no battery-life promises, no waterproofing
+  promises, no pricing claims unless explicitly provided.
+  After writing the file, show its contents. Do not invoke subagents yet.
+
+VERIFY: input/product.txt exists and contains only the given product facts.
+
+STEP 4 — RUN THE SEQUENTIAL PIPELINE (5 MINUTES)
+------------------------------------------------
+Paste this SINGLE orchestration prompt into Claude Code:
+
+  Run the product-content pipeline using the THREE project subagents in STRICT
+  SEQUENTIAL order. Invoke the named subagents using Claude Code's subagent
+  delegation capability, not by merely adopting their personas yourself.
+
+  STAGE A:
+  Read input/product.txt. Invoke product-analyst with those facts.
+  WAIT for its response. Save its entire response to output/01_analysis.md.
+
+  STAGE B:
+  Invoke marketing-writer ONLY AFTER A finishes. Pass it the complete
+  contents of output/01_analysis.md as its input. WAIT for its response.
+  Save its entire response to output/02_description.md.
+
+  STAGE C:
+  Invoke quality-reviewer ONLY AFTER B finishes. Pass it BOTH
+  output/02_description.md and input/product.txt. WAIT for its response.
+  Save its entire response to output/03_review.md.
+
+  Do NOT run agents in parallel. Do NOT substitute your own direct writing
+  for the subagent calls. If a delegation tool is unavailable, stop and
+  explain the blocker instead of simulating agent execution.
+
+  Finally show:
+  - the three subagents actually invoked, in execution order;
+  - which saved file was passed into each later stage;
+  - the final approved copy from output/03_review.md.
+
+VERIFY: Inspect the Claude Code transcript for THREE real subagent invocations
+in order: product-analyst → marketing-writer → quality-reviewer. Then inspect:
+  output/01_analysis.md
+  output/02_description.md
+  output/03_review.md
+Confirm that the writer uses the benefits brief and the reviewer checks the
+draft against original facts.
+
+STEP 5 — PROVE THE HANDOFF (3 MINUTES)
+--------------------------------------
+Paste into Claude Code:
+
+  Audit the sequential pipeline WITHOUT rerunning it. For each of the three
+  output files, summarize one concrete piece of information that moved
+  from the prior stage into the next stage. Flag any unsupported claims.
+  Identify the actual delegation calls visible in THIS conversation.
+  If you cannot verify a call, explicitly say NOT VERIFIED.
+
+SUCCESS CHECK:
+[ ] All three agent files exist.
+[ ] Three real, sequential subagent calls are visible.
+[ ] output/01_analysis.md contains FACTS and BENEFITS.
+[ ] output/02_description.md uses the analysis, not invented details.
+[ ] output/03_review.md contains VERDICT, ISSUES, and FINAL_COPY.
+[ ] Final copy contains no invented battery, health, price, or waterproof claims.
+
+OPTIONAL CHALLENGE (2–3 MINUTES)
+--------------------------------
+Change the product facts: remove temperature retention and add a 750 ml
+capacity. Ask Claude Code to rerun the SAME sequential pipeline with updated
+facts and overwrite the three output files. Verify the new final copy mentions
+750 ml and no longer claims temperature retention.
+
+TROUBLESHOOTING
+---------------
+- Agents not discovered: Make sure files are inside the current project's
+  .claude/agents/ directory, with valid YAML frontmatter; restart Claude Code
+  if needed, and inspect the installed version's agent listing command.
+- Agent did not execute: Explicitly request its name via the delegation tool;
+  inspect the transcript. An output file written directly by the orchestrator
+  is NOT evidence of agent execution.
+- Stages run in parallel: Stop and rerun with explicit WAIT instructions.
+- Later agent invents a feature: Require the reviewer to compare with
+  input/product.txt and remove unsupported statements.
+- No write permissions: Open a writable workspace and approve relevant tool
+  access when prompted. Do not disable all permission checks.
+
+KEY TAKEAWAY
+------------
+Sequential agent execution = run A → wait → pass A's output into B → wait →
+pass B's output into C. The orchestrator owns the handoffs; agents do not
+magically share conversation histories.

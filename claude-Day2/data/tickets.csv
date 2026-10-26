@@ -1,0 +1,13 @@
+ticket_id,customer_id,category,priority,status,created_at,summary
+T-1001,C-01,Access,HIGH,OPEN,2026-10-20T07:00:00Z,Cannot access admin console
+T-1002,C-02,Billing,MEDIUM,IN_PROGRESS,2026-10-18T10:00:00Z,Invoice export missing entries
+T-1003,C-03,General,LOW,OPEN,2026-10-21T07:30:00Z,Change notification preferences
+T-1004,C-04,Technical,HIGH,RESOLVED,2026-10-17T08:00:00Z,API login returns 401
+T-1005,C-05,Technical,HIGH,OPEN,2026-10-20T08:00:00Z,Webhook deliveries fail
+T-1006,C-06,Account,MEDIUM,OPEN,2026-10-19T08:00:00Z,SSO provisioning delay
+T-1007,C-07,General,LOW,IN_PROGRESS,2026-10-18T07:00:00Z,Improve help center content
+T-1008,C-08,Billing,HIGH,IN_PROGRESS,2026-10-21T00:00:00Z,Duplicate invoice generation
+T-1009,C-09,Account,MEDIUM,RESOLVED,2026-10-16T06:00:00Z,Email verification issue
+T-1010,C-10,Technical,LOW,OPEN,2026-10-17T08:00:00Z,Slow dashboard page
+T-1011,C-11,Billing,MEDIUM,OPEN,2026-10-20T10:00:00Z,Need corrected payment receipt
+T-1012,C-12,Account,LOW,RESOLVED,2026-10-20T09:00:00Z,Update organization profile
